@@ -22,8 +22,12 @@ def prepare_superstore(df):
     df['ship_date']= pd.to_datetime(df['ship_date'])
     # Calculate days between shipment and order placement
     df['days_bw_shipment'] = df['ship_date'] - df['order_date']
+    # add minutes to the order_date to avoid duplicate values
+    df['order_date_anew'] = df['order_date'] + pd.to_timedelta(df.groupby('order_date').cumcount(), unit='h')
     # Sort index by order date
-    df = df.set_index('order_date').sort_index()
+    df = df.set_index('order_date_anew').sort_index()
+    # drop the old order date
+    df = df.drop(['order_date'], axis=1)
     # Create columns for month and year
     df['month'] = df.index.month_name()
     df['year'] = df.index.year
