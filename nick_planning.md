@@ -32,7 +32,27 @@ As of 1 p.m. I am still in the early stages of exploration and have not applied 
 ### Which products had outstanding sales volumes?          
 ### Does product type vary by customer/region?          
           
+##### Bear in Mind
+#### Each of these Sales are on U.S. territory
+So we can apply our knowledge of major sales days or trends in months 
+##### Take for example: 
+* January 1st New Year's Day Sales (typically runs for 2-4 days) 
+* President's Day (3rd Monday of February)
+* Memorial Day (Last Monday in May)
+* Jun 21st Amazon Prime Day
+* July 4th Independence Day
+* August 8th National Bargain Hunting Week
+* Labor Day (1st Monday in September)
+* Columbus Day (1st Monday in October)
+* Oct 12 Fair Trade Month
+* November 25th-ish Black Friday (the day after Thanksgiving)
+* November 28th-ish Cyber Monday (Monday following Black Friday)
 
+We can anticipate these days will have discounts applied. Perhaps sometimes excessively, other times maybe less competitively than needed. 
+
+##### Speaking of Competition
+For certain products, months such as March Madness (and the beginning of the year more generally) as well as October represent tremendous opportunities
+for sales fluctuations in accordance with marketing trends as they pertain to sports. 
 
 
 
