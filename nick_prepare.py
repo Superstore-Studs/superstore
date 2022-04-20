@@ -27,7 +27,59 @@ def prepare_superstore(df):
     # Create columns for month and year
     df['month'] = df.index.month_name()
     df['year'] = df.index.year
+    # Create product-based columns
+    df['profit_per_product'] = df.profit / df.quantity
+    # add sales per product
+    df['sales_per_product'] = df.sales / df.quantity
     # get the DF
+    return df
+
+def reorder_df(df):
+    # Reordered month in df
+    df_columns = [col for col in df.columns if col != 'month']
+    df_columns.insert(8, 'month')
+    df = df[df_columns]
+    
+    # Reordered year in df
+    df_columns = [col for col in df.columns if col != 'year']
+    df_columns.insert(0, 'year')
+    df = df[df_columns]
+    
+    # Reordered month in df
+    df_columns = [col for col in df.columns if col != 'month']
+    df_columns.insert(0, 'month')
+    df = df[df_columns]
+    
+    # Reordered customer_name in df
+    df_columns = [col for col in df.columns if col != 'customer_name']
+    df_columns.insert(10, 'customer_name')
+    df = df[df_columns]
+    
+    # Reordered region_name in df
+    df_columns = [col for col in df.columns if col != 'region_name']
+    df_columns.insert(2, 'region_name')
+    df = df[df_columns]
+    
+    # Reordered sales in df
+    df_columns = [col for col in df.columns if col != 'sales']
+    df_columns.insert(21, 'sales')
+    df = df[df_columns]
+    
+    # Reordered profit in df
+    df_columns = [col for col in df.columns if col != 'profit']
+    df_columns.insert(19, 'profit')
+    df = df[df_columns]
+    
+    # Reordered quantity in df
+    df_columns = [col for col in df.columns if col != 'quantity']
+    df_columns.insert(18, 'quantity')
+    df = df[df_columns]
+    
+    # Reordered discount in df
+    df_columns = [col for col in df.columns if col != 'discount']
+    df_columns.insert(18, 'discount')
+    df = df[df_columns]
+    
     return df
     
     
