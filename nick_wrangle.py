@@ -8,11 +8,13 @@ from datetime import date
 
 def wrangle_superstore():
     '''
-    Implements acquisition, preparation, pre-processing, and splitting for superstore. Dummies have not been created and will be made following the EDA cycle, and then retroactively applied to the splits.
+    Implements acquisition, preparation, pre-processing, and splitting for superstore. Dummies have not been created and will be made following the EDA cycle, and then retroactively applied to the splits. We implement a human-based approach to splitting, because the
+    cut-off dates are more exact, and the sizes are still approximately .7/.3. Train would only have an additional 24 rows if the percentage-based method is used, while causing visual confusion. 
     '''
     df = prepare_superstore(acquire_superstore_data())
-    train, validate, test = split_superstore_data(df)
-    return train, validate, test
+    train = df[:'2016'] # includes 2016
+    test = df['2017']
+    return train, test
 
 # -------------------------------------------------
 
