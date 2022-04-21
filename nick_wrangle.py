@@ -8,11 +8,13 @@ from datetime import date
 
 def wrangle_superstore():
     '''
-    Implements acquisition, preparation, pre-processing, and splitting for superstore. Dummies have not been created and will be made following the EDA cycle, and then retroactively applied to the splits.
+    Implements acquisition, preparation, pre-processing, and splitting for superstore. Dummies have not been created and will be made following the EDA cycle, and then retroactively applied to the splits. We implement a human-based approach to splitting, because the
+    cut-off dates are more exact, and the sizes are still approximately .7/.3. Train would only have an additional 24 rows if the percentage-based method is used, while causing visual confusion. 
     '''
     df = prepare_superstore(acquire_superstore_data())
-    train, validate, test = split_superstore_data(df)
-    return train, validate, test
+    train = df[:'2016'] # includes 2016
+    test = df['2017']
+    return train, test
 
 # -------------------------------------------------
 
@@ -54,8 +56,66 @@ SELECT * FROM orders
     
     return df
 
+def reorder_df(df):
+    '''
+    Since the Dataframe only visualizes the first and last ten columns
+    I have restructuted the DataFrame column order based on what is
+    most pertinent to see easily. 
+    '''
+    # Reordered month in df
+    df_columns = [col for col in df.columns if col != 'month']
+    df_columns.insert(8, 'month')
+    df = df[df_columns]
+    
+    # Reordered year in df
+    df_columns = [col for col in df.columns if col != 'year']
+    df_columns.insert(0, 'year')
+    df = df[df_columns]
+    
+    # Reordered month in df
+    df_columns = [col for col in df.columns if col != 'month']
+    df_columns.insert(0, 'month')
+    df = df[df_columns]
+    
+    # Reordered customer_name in df
+    df_columns = [col for col in df.columns if col != 'customer_name']
+    df_columns.insert(10, 'customer_name')
+    df = df[df_columns]
+    
+    # Reordered region_name in df
+    df_columns = [col for col in df.columns if col != 'region_name']
+    df_columns.insert(2, 'region_name')
+    df = df[df_columns]
+    
+    # Reordered sales in df
+    df_columns = [col for col in df.columns if col != 'sales']
+    df_columns.insert(21, 'sales')
+    df = df[df_columns]
+    
+    # Reordered profit in df
+    df_columns = [col for col in df.columns if col != 'profit']
+    df_columns.insert(19, 'profit')
+    df = df[df_columns]
+    
+    # Reordered quantity in df
+    df_columns = [col for col in df.columns if col != 'quantity']
+    df_columns.insert(18, 'quantity')
+    df = df[df_columns]
+    
+    # Reordered discount in df
+    df_columns = [col for col in df.columns if col != 'discount']
+    df_columns.insert(18, 'discount')
+    df = df[df_columns]
+    
+    return df
+
 def prepare_superstore(df):
     '''
+    Acquires from MySql, converts columns to snakecase, drops redundant foreign keys
+    Creates date_time columns, feature engineers days between shipment, isolates month 
+    and year, creates profit and sales per product, sets order_date as the index
+    and then reorders the columns so that the most captivating and informative columns
+    can always be seen when calling the DF. 
     '''
     # First obtain the DataFrame and define the variable. 
     df = acquire_superstore_data()
@@ -68,12 +128,21 @@ def prepare_superstore(df):
     df['ship_date']= pd.to_datetime(df['ship_date'])
     # Calculate days between shipment and order placement
     df['days_bw_shipment'] = df['ship_date'] - df['order_date']
+    # add minutes to the order_date to avoid duplicate values
+    df['order_date_anew'] = df['order_date'] + pd.to_timedelta(df.groupby('order_date').cumcount(), unit='h')
     # Sort index by order date
-    df = df.set_index('order_date').sort_index()
+    df = df.set_index('order_date_anew').sort_index()
+    # drop the old order date
+    df = df.drop(['order_date'], axis=1)
     # Create columns for month and year
     df['month'] = df.index.month_name()
     df['year'] = df.index.year
+    # Create product-based columns
+    df['profit_per_product'] = df.profit / df.quantity
+    # add sales per product
+    df['sales_per_product'] = df.sales / df.quantity
     # get the DF
+    
     return df
 
 def split_superstore_data(df):
