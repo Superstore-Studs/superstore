@@ -35,6 +35,13 @@ def prepare_superstore(df):
     df['profit_per_product'] = df.profit / df.quantity
     # add sales per product
     df['sales_per_product'] = df.sales / df.quantity
+    # create column for brands, only first six letters. 
+    brands = df[['product_name']]
+    split = pd.DataFrame(brands.product_name.str.split(' ', expand=True))
+    split = split[[0]]
+    split = split.rename(columns={0: 'brand'})
+    split = pd.DataFrame(split.brand.str[0:6])
+    df = pd.concat([df, split], axis=1) 
     # get the DF
     return df
 
