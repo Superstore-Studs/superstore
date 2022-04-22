@@ -5,10 +5,6 @@
 [[Project Acquisition](#project_acquisition)]
 [[Project Preparation](#project_preparation)]
 [[Project Exploration](#project_exploration)]
-[[Key Findings](#findings)]
-[[Data Acquire, Prep, and Exploration](#wrangle)]
-[[Statistical Analysis](#stats)]
-[[Conclusion](#conclusion)]
 
 
 ## Data Dictonary
@@ -68,20 +64,23 @@
 ## <a name="project_planning"></a>
 [[Back to top](#top)]
 
- **Plan** -> Acquire -> Prepare -> Explore -> Model & Evaluate -> Deliver
+ **Plan** -> Acquire -> Prepare -> Explore 
 
-- Tasking out how I plan to work through the pipeline.
+- Tasking out how we plan to work through the pipeline.
+- We have elected to address the Vice President of Product's questions. 
 
 ### Target variable
-- ____
+- Profit/profit_per_product
 
 ### Initial Focus
-- _____
-- _____
-- _____
+- Find distinctions among the Furniture, Office Supplies, and Technology to see how the superstore is profiting from each; noticing trends with this approach will guide our process
+- Feature-engineer variables on a product-by-product basis, to show how much profit or sales are made in accordance with the quantity per order
+    - Ensure we observe whether or not a discount has been applied before considering a product or subcategory as a boon or blunder
+- Of course check immediately for data cleanliness and adjust accordingly.
 
 
 ### Project Outline:
+- It generally goes like this: 
 - Acquisiton via Codeup Database
 - Preparation and pre-preocessing data using Pandas
     - Remove features
@@ -91,37 +90,63 @@
     - Handle null values
         - are these fixable or should they just be deleted?
     - Handle outliers
-    - Split Data before EDA
+    - Split Data before EDA (not the case for this project)
 - Exploratory Data Analysis
      - Visualization using MatPlotLib and Seaborn
 - Statistical Testing
-- Modeling: Primary focus is Regression in its many forms 
-- Implementation via Test set
 - Conclude with the results.
 
 ### Hypotheses
-- ________
-- ________
-- ________
-- ________
+- Technology is the most advantageous but underutilized category.
+- Technological product lines will be across-the-board worth expanding
+- Furniture has been a dangeous and failing pursuit for the superstore and may make its image suffer
+- Although most sales happen under office supplies, the profit potential for technology exceeds it. 
 
 # Project Acquisition
 <a name="project_acquisition"></a>
 [[Back to top](#top)]
 
- Plan -> **Acquire** -> Prepare -> Explore -> Model & Evaluate -> Deliver
+ Plan -> **Acquire** -> Prepare -> Explore 
 
-Functions used can be found in wrangle.py in git hub repo
+Functions used can be found in wrangle.py. 
 
 1. Acquire the superstore data from the from Codeup's MySQL server, then convert it into a Pandas DataFrame.
 ```
+# If the cached parameter is True, read the csv file on disk in the same folder as this file 
+    if os.path.exists('superstore.csv') and use_cache:
+        print('Using cached CSV')
+        return pd.read_csv('superstore.csv')
 
+    # When there's no cached csv, read the following query from Codeup's MySQL database.
+    print('CSV not detected.')
+    print('Acquiring data from MySQL database instead.')
+    df = pd.read_sql(
+        '''
+SELECT * FROM orders 
+    JOIN customers USING (`Customer ID`)
+    JOIN products USING(`Product ID`)
+    JOIN categories USING (`Category ID`)
+    JOIN regions USING (`Region ID`);             
+        '''
+                    , get_db_url('superstore_db'))
+    
+    
+    
+    print('Acquisition Complete. Dataframe available and is now cached for future use.')
+    # create a csv of the dataframe for the sake of efficiency. 
+    df.to_csv('superstore.csv', index=False)
 ```
 
 2. Observe the initial information
     - TAKEAWAYS:
-        -  
-            - 
+        - There are no nulls and the date-time columns need to be converted to be used
+            - No major inconsistencies in the data, but the columns need to be renamed.
+```
+# Convert column names to snake_case
+    df.columns = [col.lower().replace(" ","_").replace("-","_") for col in df.columns]
+```
+
+    - There are redundant columns. Removing them is optional. 
 3. Used UDF describe data to closely inspect contents.
 
 
@@ -131,27 +156,47 @@ Functions used can be found in wrangle.py in git hub repo
 
  Plan -> Acquire -> **Prepare** -> Explore -> Model & Evaluate -> Deliver
 
-Functions used can be found in wrangle.py in git hub repo
+Functions used can be found in wrangle.py. 
 
 1. Clean-up:
+    - Take note of the engineered-features
 ```
+# Calculate days between shipment and order placement
+    df['days_bw_shipment'] = df['ship_date'] - df['order_date']
+# add minutes to the order_date to avoid duplicate values
+    df['order_date_anew'] = df['order_date'] + pd.to_timedelta(df.groupby('order_date').cumcount(), unit='h')
+# Create product-based columns
+    df['profit_per_product'] = df.profit / df.quantity
+# add sales per product
+    df['sales_per_product'] = df.sales / df.quantity
 
 ```
-
+    - Extracting the brand name was tedious, but worked nevertheless. 
+    - Initially we split the data before exploration, but later saw this was futile.
+    - There was no modeling, and so we ultimately consolidated the test and train sets. 
+        - Although retroactively you could see it as us simply ompting not to split. 
+        
 # Project Exploration
 <a name="project_exploration"></a>
 [[Back to top](#top)]
 
- Plan -> Acquire -> Prepare -> **Explore** -> Model & Evaluate -> Deliver
+ Plan -> Acquire -> Prepare -> **Explore** 
 
-1. Separate train and use only that DF for EDA.
-2. Correlation heatmaps 
-    - 
-    - 
-    - 
-3. Bi-variate and Multivariate visualizations via Seaborn
+1. Questions we sought to address within Exploration: 
+    - Which product line should we expand? 
+    - Is there a product category that is particularly profitable for us? 
+    - Does one or another stand out in terms of sales volume? 
+2. Hypothesis Testing
+                We rejected the null for each. 
+    - Is Furniture worth keeping under consideration? 
+        - No. Furniture profit on average is less than the overall profit avg. 
+    - Is Technology a worthwhile business venture? 
+        - Absolutely. Technology profit on average is far greater than overall profit avg. 
+ CONCLUSION       
+3. Answers to the three questions. 
+    - Technology under the brands Ativa, Canon, and Konftel
+    - Technology invites a lot of room for business growth
+    - Office Supplies in their entirety far exceed the other two categories
 
 
-# Stat Tests
-## <a name="stats"></a>Statistical Analysis
 [[Back to top](#top)]
