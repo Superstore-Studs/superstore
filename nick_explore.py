@@ -89,7 +89,7 @@ def products_furn_and_tech(df):
     sns.barplot(data= furniture_df, x = 'sub_category', y= 'profit', hue = 'region_name', ci = None, estimator = np.sum, ax=ax[1]).set_title('Furniture Products')
     
     
-    def create_top_bottom_dfs(df): 
+def create_top_bottom_dfs(df): 
     ''' 
     Takes in superstore DataFrame and creates multiple subsets, sorted by profit-per-product
     in descendening order to show top products for each sub-categories, and ascending for the least
