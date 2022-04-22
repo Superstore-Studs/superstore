@@ -8,7 +8,6 @@
 [[Key Findings](#findings)]
 [[Data Acquire, Prep, and Exploration](#wrangle)]
 [[Statistical Analysis](#stats)]
-[[Modeling](#model)]
 [[Conclusion](#conclusion)]
 
 
@@ -18,7 +17,30 @@
 
 | Attribute | Definition | Data Type |
 | ----- | ----- | ----- |
-|  |  |  |  
+| product_id | Unique-identifier for each product | object |  
+| customer_id | Unique-identifier for each customer | object
+| order_id | Unique-identifier for each order | object
+| ship_date | Day the order was shipped | datetime64
+| ship_mode | Shipping time window | object
+| segment | Customer segment: home office, consumer, corporate | object
+| city | City the order was placed from | object
+| state | State the order was placed form | object
+| postal_code | Postal code of shipment address | float64
+| sales | Dollars spent to obtain the order | float64
+| quantity | Total number of a particular product sold | float64
+| discount | The discount amount of the order (as applicable) | float64
+| profit | The money gained or loss per order | float64
+| customer_name | Full name of the customer | object
+| product_name | Full name of the product | object
+| category | Identifies as Technology, Office Supplies, or Furniture | object
+| sub_category | More detailed subsections within the aforementioned three | object
+| region_name | East, West, South, Central | object
+| days_bw_shipment | Time between order date and shipping date | int64
+| month | Month the order was placed | object
+| year | Year the order was placed | int64
+| profit_per_product | Profit divided by quantity per order | float64
+| sales_per_product | Sales divided by quantity per order | float64
+| brand | Brand name extracted from product_name | object
 
 ## Project Description and Goals
 <a name="project_description"></a>
