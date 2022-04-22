@@ -154,7 +154,7 @@ SELECT * FROM orders
 <a name="project_preparation"></a>
 [[Back to top](#top)]
 
- Plan -> Acquire -> **Prepare** -> Explore -> Model & Evaluate -> Deliver
+ Plan -> Acquire -> **Prepare** -> Explore 
 
 Functions used can be found in wrangle.py. 
 
