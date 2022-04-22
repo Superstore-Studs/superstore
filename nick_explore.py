@@ -1,4 +1,4 @@
-import plotly.express as px
+#import plotly.express as px
 from env import host, username, password
 import os
 import pandas as pd 
@@ -9,7 +9,7 @@ from collections import Counter
 from sklearn.model_selection import train_test_split
 from datetime import date
 import nick_wrangle as get
-import plotly.express as px
+#import plotly.express as px
 
 def superstore_over_time(df):
     '''
